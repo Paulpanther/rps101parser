@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import json
 import os.path
 import urllib.request
@@ -17,6 +19,23 @@ def read_site(gesture_id):
 
 
 def parse_site(site_content, gesture_id):
+    """ Parses the following attributes:
+    title, image, verbs and other_gesture_ids
+
+    :param site_content: a html string
+    :param gesture_id: the current id
+    :return: {
+      title: str,
+      img: str,
+      id: number,
+      compares: [
+        {
+          verb: [str],
+          other_gesture_id: number
+        }
+      ]
+    }
+    """
     soup = BeautifulSoup(site_content, 'html.parser')
 
     img = soup.body.img
@@ -57,6 +76,8 @@ def parse_site(site_content, gesture_id):
 
 def download_image_to_folder(image, folder):
     image_path = os.path.join(folder, image)
+
+    # Create directories if not existing
     Path(image_path).parent.mkdir(parents=True, exist_ok=True)
 
     with open(image_path, 'wb') as file:
@@ -64,7 +85,9 @@ def download_image_to_folder(image, folder):
 
 
 def write_to_file(parsed, folder):
+    # Create directories if not existing
     Path(folder).mkdir(parents=True, exist_ok=True)
+
     with open(os.path.join(folder, '101.json'), 'w') as file:
         json.dump(parsed, file)
 
