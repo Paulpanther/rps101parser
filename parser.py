@@ -14,8 +14,14 @@ OUT_FOLDER = 'out'
 
 
 def read_site(gesture_id):
-    url = DEFAULT_URL.format(gesture_id)
-    return str(urllib.request.urlopen(url).read())
+    req = urllib.request.Request(
+        DEFAULT_URL.format(gesture_id), 
+        data=None, 
+        headers={
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0'
+        }
+    )   
+    return str(urllib.request.urlopen(req).read())
 
 
 def parse_site(site_content, gesture_id):
@@ -81,7 +87,15 @@ def download_image_to_folder(image, folder):
     Path(image_path).parent.mkdir(parents=True, exist_ok=True)
 
     with open(image_path, 'wb') as file:
-        file.write(urllib.request.urlopen(DEFAULT_IMG_URL.format(image)).read())
+        
+        req = urllib.request.Request(
+            DEFAULT_IMG_URL.format(image), 
+            data=None, 
+            headers={
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0'
+            }
+        )
+        file.write(urllib.request.urlopen(req).read())
 
 
 def write_to_file(parsed, folder):
